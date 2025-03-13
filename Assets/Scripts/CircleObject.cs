@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class CircleObject : MonoBehaviour
 {
+    public int level;
     public bool isDrag; //드래그 상태 확인
     Rigidbody2D rigid;
+    Animator ani;
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        ani = GetComponent<Animator>();
         isDrag = false;
+    }
+
+    private void OnEnable()
+    {
+        ani.SetInteger("Level", level);
     }
 
     // Update is called once per frame

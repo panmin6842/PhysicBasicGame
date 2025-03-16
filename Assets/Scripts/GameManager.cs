@@ -7,6 +7,10 @@ public class GameManager : MonoBehaviour
     public CircleObject circleObject;
     public GameObject objectPrefab;
     public Transform objectGroupPos;
+    public GameObject effectPrefab;
+    public Transform effectGroupPos;
+
+    public int maxLevel;
 
     private void Awake()
     {
@@ -20,16 +24,22 @@ public class GameManager : MonoBehaviour
 
     CircleObject GetDongle() //오브젝트 생성 할 수 있도록
     {
-        GameObject instant = Instantiate(objectPrefab, objectGroupPos);
-        CircleObject instantObject = instant.GetComponent<CircleObject>();
-        return instantObject;
+        //이펙트 생성
+        GameObject instantEffectObject = Instantiate(effectPrefab, effectGroupPos);
+        ParticleSystem instantEffect = instantEffectObject.GetComponent<ParticleSystem>();
+        //오브젝트 생성
+        GameObject instantCircleObj = Instantiate(objectPrefab, objectGroupPos);
+        CircleObject instantCircle = instantCircleObj.GetComponent<CircleObject>();
+        instantCircle.effect = instantEffect; //이펙트 넣어줌
+        return instantCircle;
     }
 
     void NextObject() //오브젝트 생성
     {
         CircleObject newObject = GetDongle();
         circleObject = newObject;
-        circleObject.level = Random.Range(0, 8);
+        circleObject.gameManager = this;
+        circleObject.level = Random.Range(0, 3);
         circleObject.gameObject.SetActive(true); //크기 설정 후 보이게 하기
 
         StartCoroutine(WaitNext());

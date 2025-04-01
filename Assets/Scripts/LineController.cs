@@ -8,6 +8,7 @@ public class LineController : MonoBehaviour
     public GameObject linePrefab;
 
     LineRenderer lineRenderer;
+    LineColor lineColor;
     List<Vector2> points = new List<Vector2>(); //마우스의 포지션
 
     [SerializeField] GameObject customCircle;
@@ -19,6 +20,15 @@ public class LineController : MonoBehaviour
     [SerializeField] float radius;
     float lineWidth;
 
+    Color color;
+
+    private void OnEnable()
+    {
+        lineColor = FindObjectOfType<LineColor>();
+        color = lineColor.GetColor();
+        lineWidth = lineColor.sizeSlider.value;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,14 +36,17 @@ public class LineController : MonoBehaviour
         center = customCircle.transform.position; //중심 좌표
         circleObjCenter = center;
         radius = circleCollder.bounds.size.x / 2; //반지름 길이
-
-        lineWidth = 0.1f;
     }
 
     // Update is called once per frame
     void Update()
     {
         dist = Vector2.Distance(Camera.main.ScreenToWorldPoint(Input.mousePosition), circleObjCenter); //원 중심 좌표과 마우스 좌표 사이의 거리 구함
+        LineDraw();
+    }
+
+    void LineDraw()
+    {
         if (Mathf.Abs(dist) <= radius - (lineWidth / 2)) //원 안에서만 그려질 수 있도록
         {
             if (Input.GetMouseButtonDown(0)) //첫번째 포지션
@@ -47,8 +60,8 @@ public class LineController : MonoBehaviour
                 lineRenderer.startWidth = lineWidth;
                 lineRenderer.endWidth = lineWidth;
                 //선 색
-                lineRenderer.startColor = new Color(0.3f, 0.3f, 0.3f);
-                lineRenderer.endColor = new Color(0.3f, 0.3f, 0.3f);
+                lineRenderer.startColor = color;
+                lineRenderer.endColor = color;
             }
             else if (Input.GetMouseButton(0)) //마우스 누를 동안 그려지게
             {

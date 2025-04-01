@@ -2,12 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+//using System.Drawing;
 
 public class LineColor : MonoBehaviour
 {
-    public Image circlePalette;
-    public Image picker;
+    [SerializeField] Image circlePalette;
+    [SerializeField] Image picker;
+    [SerializeField] GameObject bg;
+    [SerializeField] LineRenderer testLineRenderer;
+    [SerializeField] GameObject testObj;
     public Color selectedColor;
+    public Slider sizeSlider;
+
+    [SerializeField] GameObject lineController;
 
     Vector2 sizeOfPalette;
     CircleCollider2D paletteCollider;
@@ -26,7 +33,21 @@ public class LineColor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            lineController.GetComponent<LineController>().enabled = true;
+            circlePalette.gameObject.SetActive(false);
+            picker.gameObject.SetActive(false);
+            bg.SetActive(false);
+            testObj.SetActive(false);
+        }
+
+        //¼± ±½±â
+        testLineRenderer.startWidth = sizeSlider.value;
+        testLineRenderer.endWidth = sizeSlider.value;
+        //¼± »ö
+        testLineRenderer.startColor = selectedColor;
+        testLineRenderer.endColor = selectedColor;
     }
 
     void SelectedColor()

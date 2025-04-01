@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LineController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class LineController : MonoBehaviour
     Vector2 center;
     [SerializeField] float dist;
     [SerializeField] float radius;
+    float lineWidth;
 
     // Start is called before the first frame update
     void Start()
@@ -24,13 +26,15 @@ public class LineController : MonoBehaviour
         center = customCircle.transform.position; //중심 좌표
         circleObjCenter = center;
         radius = circleCollder.bounds.size.x / 2; //반지름 길이
+
+        lineWidth = 0.1f;
     }
 
     // Update is called once per frame
     void Update()
     {
         dist = Vector2.Distance(Camera.main.ScreenToWorldPoint(Input.mousePosition), circleObjCenter); //원 중심 좌표과 마우스 좌표 사이의 거리 구함
-        if (Mathf.Abs(dist) <= radius) //원 안에서만 그려질 수 있도록
+        if (Mathf.Abs(dist) <= radius - (lineWidth / 2)) //원 안에서만 그려질 수 있도록
         {
             if (Input.GetMouseButtonDown(0)) //첫번째 포지션
             {
@@ -39,6 +43,12 @@ public class LineController : MonoBehaviour
                 points.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
                 lineRenderer.positionCount = 1;
                 lineRenderer.SetPosition(0, points[0]);
+                //선 굵기
+                lineRenderer.startWidth = lineWidth;
+                lineRenderer.endWidth = lineWidth;
+                //선 색
+                lineRenderer.startColor = new Color(0.3f, 0.3f, 0.3f);
+                lineRenderer.endColor = new Color(0.3f, 0.3f, 0.3f);
             }
             else if (Input.GetMouseButton(0)) //마우스 누를 동안 그려지게
             {

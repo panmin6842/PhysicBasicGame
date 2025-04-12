@@ -25,7 +25,7 @@ public class LineController : MonoBehaviour
     private void OnEnable()
     {
         lineColor = FindObjectOfType<LineColor>();
-        color = lineColor.GetColor();
+        color = lineColor.selectedColor;
         lineWidth = lineColor.sizeSlider.value;
     }
 

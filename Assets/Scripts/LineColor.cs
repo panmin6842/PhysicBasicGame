@@ -20,6 +20,7 @@ public class LineColor : MonoBehaviour
     CircleCollider2D paletteCollider;
 
     float radius;
+    bool buttonClick;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +29,7 @@ public class LineColor : MonoBehaviour
             circlePalette.GetComponent<RectTransform>().rect.height);
 
         radius = sizeOfPalette.x * 0.5f;
+        buttonClick = false;
     }
 
     // Update is called once per frame
@@ -40,8 +42,9 @@ public class LineColor : MonoBehaviour
             picker.gameObject.SetActive(false);
             bg.SetActive(false);
             testObj.SetActive(false);
+            sizeSlider.gameObject.SetActive(false);
         }
-
+        Debug.Log(buttonClick);
         //선 굵기
         testLineRenderer.startWidth = sizeSlider.value;
         testLineRenderer.endWidth = sizeSlider.value;
@@ -57,12 +60,15 @@ public class LineColor : MonoBehaviour
         Vector3 diff = Vector3.ClampMagnitude(offset, radius);
         picker.transform.position = transform.position + diff;
 
-        selectedColor = GetColor();
+        if(!buttonClick)
+            selectedColor = GetColor();
     }
 
     public void MousePointDown()
     {
         SelectedColor();
+        buttonClick = false;
+        
     }
 
     public void MouseDrag()
@@ -80,10 +86,22 @@ public class LineColor : MonoBehaviour
         Vector2 normalized = new Vector2(Mathf.Clamp01((pos.x) / (circlePalette.GetComponent<RectTransform>().rect.width)),
                                          Mathf.Clamp01((pos.y) / (circlePalette.GetComponent<RectTransform>().rect.height))); //정규화된 좌표로 변환
 
-        Debug.Log(normalized);
+        //Debug.Log(normalized);
         Texture2D texture = circlePalette.mainTexture as Texture2D;
         Color circularSelectedColor = texture.GetPixelBilinear(normalized.x, normalized.y);
 
         return circularSelectedColor;
+    }
+
+    public void BlackColor()
+    {
+        selectedColor = Color.black;
+        buttonClick = true;
+    }
+
+    public void WhiteColor()
+    {
+        selectedColor = Color.white;
+        buttonClick = true;
     }
 }

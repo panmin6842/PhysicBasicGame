@@ -31,6 +31,7 @@ public class CircleObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        AniSprite();
         if (isDrag)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //마우스 위치(스크린 좌표계로)
@@ -52,6 +53,42 @@ public class CircleObject : MonoBehaviour
             mousePos.z = 0;
 
             transform.position = Vector3.Lerp(transform.position, mousePos, 0.1f); //위치 마우스 위치로 따라감
+        }
+    }
+
+    void AniSprite()
+    {
+        if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 0"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage0");
+        }
+        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 1"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage1");
+        }
+        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 2"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage2");
+        }
+        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 3"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage3");
+        }
+        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 4"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage4");
+        }
+        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 5"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage5");
+        }
+        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 6"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage6");
+        }
+        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 7"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage7");
         }
     }
 

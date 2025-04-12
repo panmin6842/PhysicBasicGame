@@ -1,8 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.IO;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class RenderTextureCtrl : MonoBehaviour
 {
@@ -23,8 +28,7 @@ public class RenderTextureCtrl : MonoBehaviour
 
     private void Start()
     {
-        fileName = name + ".png";
-        path = Application.dataPath + "/Resources/" + fileName;
+        
     }
 
     private void Update()
@@ -32,6 +36,11 @@ public class RenderTextureCtrl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
            StartCoroutine(SaveTexture());
+        }
+
+        if(Input.GetKeyDown(KeyCode.W))
+        {
+            SceneManager.LoadScene("MainScene");
         }
     }
 
@@ -48,17 +57,22 @@ public class RenderTextureCtrl : MonoBehaviour
 
         RenderTexture.active = null;
 
-        
-
         CircleMask(texture);
 
         //Texture2D -> sprite
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 
         //저장
+        fileName = name + ".png";
+        path = Application.dataPath + "/Resources/" + fileName;
         byte[] bytes = texture.EncodeToPNG();
         File.WriteAllBytes(path, bytes);
-        Debug.Log("이미지 저장 완료: " + path);
+        //Debug.Log("이미지 저장 완료: " + path);
+
+        //저장 후 에셋 즉시 리프레시
+#if UNITY_EDITOR
+         AssetDatabase.Refresh();
+#endif
 
         //ui sprite 바꿔주기
         saveObject.GetComponent<Image>().sprite = sprite;

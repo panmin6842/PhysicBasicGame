@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 //using System.Drawing;
@@ -21,6 +22,8 @@ public class LineColor : MonoBehaviour
 
     float radius;
     bool buttonClick;
+
+    bool paletteAppear;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +33,13 @@ public class LineColor : MonoBehaviour
 
         radius = sizeOfPalette.x * 0.5f;
         buttonClick = false;
+        paletteAppear = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q))
+        if(Input.GetKeyDown(KeyCode.Q) && paletteAppear)
         {
             lineController.GetComponent<LineController>().enabled = true;
             circlePalette.gameObject.SetActive(false);
@@ -43,8 +47,18 @@ public class LineColor : MonoBehaviour
             bg.SetActive(false);
             testObj.SetActive(false);
             sizeSlider.gameObject.SetActive(false);
+            paletteAppear = false;
         }
-        Debug.Log(buttonClick);
+        else if (Input.GetKeyDown(KeyCode.Q) && !paletteAppear)
+        {
+            lineController.GetComponent<LineController>().enabled = false;
+            circlePalette.gameObject.SetActive(true);
+            picker.gameObject.SetActive(true);
+            //bg.SetActive(false);
+            //testObj.SetActive(false);
+            sizeSlider.gameObject.SetActive(true);
+            paletteAppear = true;
+        }
         //¼± ±½±â
         testLineRenderer.startWidth = sizeSlider.value;
         testLineRenderer.endWidth = sizeSlider.value;

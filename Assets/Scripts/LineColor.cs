@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 //using System.Drawing;
@@ -12,6 +9,7 @@ public class LineColor : MonoBehaviour
     [SerializeField] GameObject bg;
     [SerializeField] LineRenderer testLineRenderer;
     [SerializeField] GameObject testObj;
+    [SerializeField] GameObject customZone;
     public Color selectedColor;
     public Slider sizeSlider;
 
@@ -39,26 +37,6 @@ public class LineColor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q) && paletteAppear)
-        {
-            lineController.GetComponent<LineController>().enabled = true;
-            circlePalette.gameObject.SetActive(false);
-            picker.gameObject.SetActive(false);
-            bg.SetActive(false);
-            testObj.SetActive(false);
-            sizeSlider.gameObject.SetActive(false);
-            paletteAppear = false;
-        }
-        else if (Input.GetKeyDown(KeyCode.Q) && !paletteAppear)
-        {
-            lineController.GetComponent<LineController>().enabled = false;
-            circlePalette.gameObject.SetActive(true);
-            picker.gameObject.SetActive(true);
-            //bg.SetActive(false);
-            //testObj.SetActive(false);
-            sizeSlider.gameObject.SetActive(true);
-            paletteAppear = true;
-        }
         //선 굵기
         testLineRenderer.startWidth = sizeSlider.value;
         testLineRenderer.endWidth = sizeSlider.value;
@@ -74,7 +52,7 @@ public class LineColor : MonoBehaviour
         Vector3 diff = Vector3.ClampMagnitude(offset, radius);
         picker.transform.position = transform.position + diff;
 
-        if(!buttonClick)
+        if (!buttonClick)
             selectedColor = GetColor();
     }
 
@@ -82,21 +60,21 @@ public class LineColor : MonoBehaviour
     {
         SelectedColor();
         buttonClick = false;
-        
+
     }
 
     public void MouseDrag()
     {
         SelectedColor();
     }
-    
+
     public Color GetColor()
     {
         Vector2 circlePalettePos = circlePalette.transform.position; //팔레트 포지션 구하기
         Vector2 pickerPos = picker.transform.position; //선택 포지션 구하기
 
         Vector2 pos = pickerPos - circlePalettePos + sizeOfPalette * 0.5f; //팔레트 내에서의 상대 좌표
-        
+
         Vector2 normalized = new Vector2(Mathf.Clamp01((pos.x) / (circlePalette.GetComponent<RectTransform>().rect.width)),
                                          Mathf.Clamp01((pos.y) / (circlePalette.GetComponent<RectTransform>().rect.height))); //정규화된 좌표로 변환
 
@@ -107,6 +85,7 @@ public class LineColor : MonoBehaviour
         return circularSelectedColor;
     }
 
+    //검정색, 흰색 버튼
     public void BlackColor()
     {
         selectedColor = Color.black;
@@ -117,5 +96,30 @@ public class LineColor : MonoBehaviour
     {
         selectedColor = Color.white;
         buttonClick = true;
+    }
+
+    //색 창 열고 닫기
+    public void ColorZoneAppear()
+    {
+        lineController.GetComponent<LineController>().enabled = false;
+        customZone.SetActive(false);
+        circlePalette.gameObject.SetActive(true);
+        picker.gameObject.SetActive(true);
+        bg.SetActive(true);
+        testObj.SetActive(true);
+        sizeSlider.gameObject.SetActive(true);
+        paletteAppear = true;
+    }
+
+    public void ColorZoneClose()
+    {
+        lineController.GetComponent<LineController>().enabled = true;
+        circlePalette.gameObject.SetActive(false);
+        picker.gameObject.SetActive(false);
+        bg.SetActive(false);
+        testObj.SetActive(false);
+        sizeSlider.gameObject.SetActive(false);
+        customZone.SetActive(true);
+        paletteAppear = false;
     }
 }

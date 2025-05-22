@@ -69,46 +69,49 @@ public class LineController : MonoBehaviour
     //그리기
     void LineDraw()
     {
-        if (Input.GetMouseButtonDown(0)) //첫번째 포지션
+        if (Mathf.Abs(dist) <= radius + 2)
         {
-            GameObject go = Instantiate(linePrefab);
-            lineRenderer = go.GetComponent<LineRenderer>();
-            points.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            lineRenderer.positionCount = 1;
-            lineRenderer.SetPosition(0, points[0]);
-
-
-            //선 굵기
-            lineRenderer.startWidth = lineWidth;
-            lineRenderer.endWidth = lineWidth;
-            //선 색
-            lineRenderer.startColor = color;
-            lineRenderer.endColor = color;
-        }
-        else if (Input.GetMouseButton(0)) //마우스 누를 동안 그려지게
-        {
-            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            if (pos != null)
+            if (Input.GetMouseButtonDown(0)) //첫번째 포지션
             {
-                if (Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
+                GameObject go = Instantiate(linePrefab);
+                lineRenderer = go.GetComponent<LineRenderer>();
+                points.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                lineRenderer.positionCount = 1;
+                lineRenderer.SetPosition(0, points[0]);
+
+
+                //선 굵기
+                lineRenderer.startWidth = lineWidth;
+                lineRenderer.endWidth = lineWidth;
+                //선 색
+                lineRenderer.startColor = color;
+                lineRenderer.endColor = color;
+            }
+            else if (Input.GetMouseButton(0)) //마우스 누를 동안 그려지게
+            {
+                Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                if (pos != null)
                 {
-                    points.Add(pos);
-                    lineRenderer.positionCount++;
-                    lineRenderer.SetPosition(lineRenderer.positionCount - 1, pos);
+                    if (Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
+                    {
+                        points.Add(pos);
+                        lineRenderer.positionCount++;
+                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, pos);
+                    }
                 }
             }
-        }
-        else if (Input.GetMouseButtonUp(0)) //마우스 때면 리스트 초기화
-        {
-            points.Clear();
+            else if (Input.GetMouseButtonUp(0)) //마우스 때면 리스트 초기화
+            {
+                points.Clear();
+            }
         }
     }
 
     //페인트로 색 채우기
     void PaintDraw()
     {
-        if (Mathf.Abs(dist) <= radius - (lineWidth / 2))
+        if (Mathf.Abs(dist) <= radius)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -131,34 +134,37 @@ public class LineController : MonoBehaviour
     //간단한 지우개 기능
     void EraserDraw()
     {
-        if (Input.GetMouseButtonDown(0)) //첫번째 포지션
+        if (Mathf.Abs(dist) <= radius + 2)
         {
-            GameObject go = Instantiate(linePrefab);
-            lineRenderer = go.GetComponent<LineRenderer>();
-            points.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            lineRenderer.positionCount = 1;
-            lineRenderer.SetPosition(0, points[0]);
-            //선 굵기
-            lineRenderer.startWidth = eraserSizeSlider.GetComponent<Slider>().value;
-            lineRenderer.endWidth = eraserSizeSlider.GetComponent<Slider>().value;
-            //선 색
-            lineRenderer.startColor = Color.white;
-            lineRenderer.endColor = Color.white;
-        }
-        else if (Input.GetMouseButton(0)) //마우스 누를 동안 그려지게
-        {
-            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            if (Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
+            if (Input.GetMouseButtonDown(0)) //첫번째 포지션
             {
-                points.Add(pos);
-                lineRenderer.positionCount++;
-                lineRenderer.SetPosition(lineRenderer.positionCount - 1, pos);
+                GameObject go = Instantiate(linePrefab);
+                lineRenderer = go.GetComponent<LineRenderer>();
+                points.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                lineRenderer.positionCount = 1;
+                lineRenderer.SetPosition(0, points[0]);
+                //선 굵기
+                lineRenderer.startWidth = eraserSizeSlider.GetComponent<Slider>().value;
+                lineRenderer.endWidth = eraserSizeSlider.GetComponent<Slider>().value;
+                //선 색
+                lineRenderer.startColor = Color.white;
+                lineRenderer.endColor = Color.white;
             }
-        }
-        else if (Input.GetMouseButtonUp(0)) //마우스 때면 리스트 초기화
-        {
-            points.Clear();
+            else if (Input.GetMouseButton(0)) //마우스 누를 동안 그려지게
+            {
+                Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                if (Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
+                {
+                    points.Add(pos);
+                    lineRenderer.positionCount++;
+                    lineRenderer.SetPosition(lineRenderer.positionCount - 1, pos);
+                }
+            }
+            else if (Input.GetMouseButtonUp(0)) //마우스 때면 리스트 초기화
+            {
+                points.Clear();
+            }
         }
     }
 

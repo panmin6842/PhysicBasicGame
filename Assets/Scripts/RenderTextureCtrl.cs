@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.IO;
 
 #if UNITY_EDITOR
@@ -12,7 +11,13 @@ using UnityEditor;
 public class RenderTextureCtrl : MonoBehaviour
 {
     [SerializeField] RenderTexture r_Texture;
-    [SerializeField] string name;
+    [SerializeField] Image[] objectSprites;
+
+    [SerializeField] GameObject customTool;
+    [SerializeField] GameObject choosepage;
+    [SerializeField] LineController lineController;
+
+    string name;
 
     Texture2D texture;
     string path;
@@ -21,27 +26,45 @@ public class RenderTextureCtrl : MonoBehaviour
     Vector2 center;
     float radius;
 
-    [SerializeField] GameObject saveObject;
-
     int width = 0;
     int height = 0;
 
     private void Start()
     {
-        
+
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-           StartCoroutine(SaveTexture());
-        }
 
-        if(Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             SceneManager.LoadScene("MainScene");
         }
+
+    }
+
+    public void BackButton() //뒤로가기
+    {
+        customTool.SetActive(false);
+        choosepage.SetActive(true);
+        lineController.enabled = false;
+    }
+    public void TextureCapture() //결정 버튼 누르면 캡쳐되고 선택 sprite 이미지 바뀜
+    {
+        StartCoroutine(SaveTexture());
+        objectSprites[0].sprite = Resources.Load<Sprite>("CircleObjectImage0");
+        objectSprites[1].sprite = Resources.Load<Sprite>("CircleObjectImage1");
+        objectSprites[2].sprite = Resources.Load<Sprite>("CircleObjectImage2");
+        objectSprites[3].sprite = Resources.Load<Sprite>("CircleObjectImage3");
+        objectSprites[4].sprite = Resources.Load<Sprite>("CircleObjectImage4");
+        objectSprites[5].sprite = Resources.Load<Sprite>("CircleObjectImage5");
+        objectSprites[6].sprite = Resources.Load<Sprite>("CircleObjectImage6");
+        objectSprites[7].sprite = Resources.Load<Sprite>("CircleObjectImage7");
+    }
+    public void Name(string renderName)
+    {
+        name = renderName;
     }
 
     IEnumerator SaveTexture()
@@ -71,11 +94,11 @@ public class RenderTextureCtrl : MonoBehaviour
 
         //저장 후 에셋 즉시 리프레시
 #if UNITY_EDITOR
-         AssetDatabase.Refresh();
+        AssetDatabase.Refresh();
 #endif
 
         //ui sprite 바꿔주기
-        saveObject.GetComponent<Image>().sprite = sprite;
+        //saveObject.GetComponent<Image>().sprite = sprite;
     }
 
     void CircleMask(Texture2D texture)
@@ -88,7 +111,7 @@ public class RenderTextureCtrl : MonoBehaviour
 
         for (int y = 0; y < height; y++)
         {
-            for(int x = 0; x < width; x++)
+            for (int x = 0; x < width; x++)
             {
                 //반지름보다 길이가 길면 배경이므로 투명화를 시켜야함
                 float dist = Vector2.Distance(new Vector2(x, y), center);

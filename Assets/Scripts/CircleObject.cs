@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CircleObject : MonoBehaviour
@@ -56,7 +55,7 @@ public class CircleObject : MonoBehaviour
         }
     }
 
-    void AniSprite()
+    void AniSprite() //각 단계의 sprite
     {
         if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 0"))
         {
@@ -105,11 +104,11 @@ public class CircleObject : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "CircleObject")
+        if (collision.gameObject.tag == "CircleObject")
         {
             CircleObject other = collision.gameObject.GetComponent<CircleObject>();
 
-            if(level == other.level && !isMerge && !other.isMerge && level < 7) //접촉된 상대와 합쳐질 수 있는 조건
+            if (level == other.level && !isMerge && !other.isMerge && level < 7) //접촉된 상대와 합쳐질 수 있는 조건
             {
                 //자신과 상대편 위치 가져오기
                 float meX = transform.position.x;
@@ -118,7 +117,7 @@ public class CircleObject : MonoBehaviour
                 float otherY = other.transform.position.y;
 
                 //내가 아래에 있거나 상대편과 동일한 높이이고 내가 오른쪽에 있을 경우 상대방은 숨기고 나는 레벨업
-                if(meY < otherY || (meY == otherY && meX > otherX))
+                if (meY < otherY || (meY == otherY && meX > otherX))
                 {
                     other.Hide(transform.position);
                     LevelUp();
@@ -141,7 +140,7 @@ public class CircleObject : MonoBehaviour
     {
         int frameCount = 0;
 
-        while(frameCount < 20) //update처럼 사용
+        while (frameCount < 20) //update처럼 사용
         {
             frameCount++;
             transform.position = Vector3.Lerp(transform.position, targetPos, 0.5f);

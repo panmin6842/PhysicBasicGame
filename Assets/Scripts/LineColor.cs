@@ -47,10 +47,23 @@ public class LineColor : MonoBehaviour
 
     void SelectedColor()
     {
-        //picker가 palette 내에서만 선택되도록 ClampMagnitude로 offset의 크기를 반지를 미만으로 제한
-        Vector3 offset = Input.mousePosition - transform.position;
-        Vector3 diff = Vector3.ClampMagnitude(offset, radius);
-        picker.transform.position = transform.position + diff;
+
+        RectTransform paletteRect = GetComponent<RectTransform>();
+        Vector2 localPoint;
+
+        //스크린 좌표를 RectTransform 좌표계의 Local Point로 변환시켜줌
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        paletteRect, //변환 기준 좌표계의 Canvas RectTransform
+        Input.mousePosition, //출력하고자 하는 스크린 좌표
+        null, //스크린 좌표와 연관된 카메라 
+        out localPoint //변환한 좌표를 저장할 변수
+        );
+
+        //picker가 원 범위 안에 있게
+        Vector2 clamped = Vector2.ClampMagnitude(localPoint, radius);
+
+        // picker를 로컬 좌표 기준으로 배치
+        picker.GetComponent<RectTransform>().anchoredPosition = clamped;
 
         if (!buttonClick)
             selectedColor = GetColor();
@@ -70,13 +83,13 @@ public class LineColor : MonoBehaviour
 
     public Color GetColor()
     {
-        Vector2 circlePalettePos = circlePalette.transform.position; //팔레트 포지션 구하기
-        Vector2 pickerPos = picker.transform.position; //선택 포지션 구하기
+        RectTransform patetteRect = circlePalette.GetComponent<RectTransform>();
+        RectTransform pickerRect = picker.GetComponent<RectTransform>();
 
-        Vector2 pos = pickerPos - circlePalettePos + sizeOfPalette * 0.5f; //팔레트 내에서의 상대 좌표
+        Vector2 relativePos = pickerRect.anchoredPosition + (patetteRect.rect.size * 0.5f); //부모기준 로컬 좌표
 
-        Vector2 normalized = new Vector2(Mathf.Clamp01((pos.x) / (circlePalette.GetComponent<RectTransform>().rect.width)),
-                                         Mathf.Clamp01((pos.y) / (circlePalette.GetComponent<RectTransform>().rect.height))); //정규화된 좌표로 변환
+        Vector2 normalized = new Vector2(Mathf.Clamp01(relativePos.x / patetteRect.rect.width),
+                                         Mathf.Clamp01(relativePos.y / patetteRect.rect.height));
 
         //Debug.Log(normalized);
         Texture2D texture = circlePalette.mainTexture as Texture2D;

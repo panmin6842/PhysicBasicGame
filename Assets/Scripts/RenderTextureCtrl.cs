@@ -1,21 +1,23 @@
 using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.IO;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+//#if UNITY_EDITOR
+//using UnityEditor;
+//#endif
 
 public class RenderTextureCtrl : MonoBehaviour
 {
     [SerializeField] RenderTexture r_Texture;
-    [SerializeField] Image[] objectSprites;
+    public Image[] objectSprites;
 
     [SerializeField] GameObject customTool;
     [SerializeField] GameObject choosepage;
     [SerializeField] LineController lineController;
+
+    [SerializeField] Sprite baseSprite;
 
     string name;
 
@@ -49,18 +51,19 @@ public class RenderTextureCtrl : MonoBehaviour
         customTool.SetActive(false);
         choosepage.SetActive(true);
         lineController.enabled = false;
+
+        objectSprites[0].sprite = LoadSprite("CircleObjectImage0");
+        objectSprites[1].sprite = LoadSprite("CircleObjectImage1");
+        objectSprites[2].sprite = LoadSprite("CircleObjectImage2");
+        objectSprites[3].sprite = LoadSprite("CircleObjectImage3");
+        objectSprites[4].sprite = LoadSprite("CircleObjectImage4");
+        objectSprites[5].sprite = LoadSprite("CircleObjectImage5");
+        objectSprites[6].sprite = LoadSprite("CircleObjectImage6");
+        objectSprites[7].sprite = LoadSprite("CircleObjectImage7");
     }
     public void TextureCapture() //결정 버튼 누르면 캡쳐되고 선택 sprite 이미지 바뀜
     {
         StartCoroutine(SaveTexture());
-        objectSprites[0].sprite = Resources.Load<Sprite>("CircleObjectImage0");
-        objectSprites[1].sprite = Resources.Load<Sprite>("CircleObjectImage1");
-        objectSprites[2].sprite = Resources.Load<Sprite>("CircleObjectImage2");
-        objectSprites[3].sprite = Resources.Load<Sprite>("CircleObjectImage3");
-        objectSprites[4].sprite = Resources.Load<Sprite>("CircleObjectImage4");
-        objectSprites[5].sprite = Resources.Load<Sprite>("CircleObjectImage5");
-        objectSprites[6].sprite = Resources.Load<Sprite>("CircleObjectImage6");
-        objectSprites[7].sprite = Resources.Load<Sprite>("CircleObjectImage7");
     }
     public void Name(string renderName)
     {
@@ -87,15 +90,16 @@ public class RenderTextureCtrl : MonoBehaviour
 
         //저장
         fileName = name + ".png";
-        path = Application.dataPath + "/Resources/" + fileName;
+        //path = Application.dataPath + "/Resources/" + fileName;
+        path = Path.Combine(Application.persistentDataPath, fileName);
         byte[] bytes = texture.EncodeToPNG();
         File.WriteAllBytes(path, bytes);
         //Debug.Log("이미지 저장 완료: " + path);
 
         //저장 후 에셋 즉시 리프레시
-#if UNITY_EDITOR
-        AssetDatabase.Refresh();
-#endif
+        //#if UNITY_EDITOR
+        //AssetDatabase.Refresh();
+        //#endif
 
         //ui sprite 바꿔주기
         //saveObject.GetComponent<Image>().sprite = sprite;
@@ -125,5 +129,25 @@ public class RenderTextureCtrl : MonoBehaviour
 
         texture.SetPixels(pixels);
         texture.Apply();
+    }
+
+    public Sprite LoadSprite(string fileName) //불러오기
+    {
+        fileName += ".png";
+
+        string path = Path.Combine(Application.persistentDataPath, fileName);
+
+        if (!File.Exists(path))
+        {
+            return baseSprite;
+        }
+
+        byte[] imageData = File.ReadAllBytes(path);
+        Texture2D tex = new Texture2D(2, 2); //미리 텍스처를 만듦
+        tex.LoadImage(imageData);
+
+        //Debug.Log("이미지 불러오는 경로: " + path);
+
+        return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 250f);
     }
 }

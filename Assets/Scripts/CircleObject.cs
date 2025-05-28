@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO;
 using UnityEngine;
 
 public class CircleObject : MonoBehaviour
@@ -9,6 +10,9 @@ public class CircleObject : MonoBehaviour
     public int level;
     public bool isDrag; //드래그 상태 확인
     public bool isMerge; //합칠 때 다른 오브젝트가 방해하지 않도록 잠금 역할
+
+
+    [SerializeField] Sprite baseSprite;
 
     Rigidbody2D rigid;
     Animator ani;
@@ -59,36 +63,54 @@ public class CircleObject : MonoBehaviour
     {
         if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 0"))
         {
-            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage0");
+            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage0");
         }
         else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 1"))
         {
-            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage1");
+            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage1");
         }
         else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 2"))
         {
-            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage2");
+            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage2");
         }
         else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 3"))
         {
-            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage3");
+            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage3");
         }
         else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 4"))
         {
-            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage4");
+            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage4");
         }
         else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 5"))
         {
-            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage5");
+            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage5");
         }
         else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 6"))
         {
-            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage6");
+            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage6");
         }
         else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 7"))
         {
-            this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CircleObjectImage7");
+            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage7");
         }
+    }
+
+    Sprite LoadSprite(string fileName) //불러오기
+    {
+        fileName += ".png";
+
+        string path = Path.Combine(Application.persistentDataPath, fileName);
+
+        if (!File.Exists(path))
+        {
+            return baseSprite;
+        }
+
+        byte[] imageData = File.ReadAllBytes(path);
+        Texture2D tex = new Texture2D(2, 2); //미리 텍스처를 만듦
+        tex.LoadImage(imageData);
+
+        return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 250f);
     }
 
     public void Drag()

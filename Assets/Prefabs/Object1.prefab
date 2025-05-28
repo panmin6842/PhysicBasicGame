@@ -157,5 +157,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38966d84d8f4cd9429136535fa97c242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
+  effect: {fileID: 0}
   level: 0
   isDrag: 0
+  isMerge: 0
+  baseSprite: {fileID: 21300000, guid: f5be512e6ab1a4d49a650d0b25e36960, type: 3}

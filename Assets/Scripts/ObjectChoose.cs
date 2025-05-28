@@ -14,6 +14,15 @@ public class ObjectChoose : MonoBehaviour
     private void Start()
     {
         renderName = renderTextureCtrl.name;
+
+        renderTextureCtrl.objectSprites[0].sprite = renderTextureCtrl.LoadSprite("CircleObjectImage0");
+        renderTextureCtrl.objectSprites[1].sprite = renderTextureCtrl.LoadSprite("CircleObjectImage1");
+        renderTextureCtrl.objectSprites[2].sprite = renderTextureCtrl.LoadSprite("CircleObjectImage2");
+        renderTextureCtrl.objectSprites[3].sprite = renderTextureCtrl.LoadSprite("CircleObjectImage3");
+        renderTextureCtrl.objectSprites[4].sprite = renderTextureCtrl.LoadSprite("CircleObjectImage4");
+        renderTextureCtrl.objectSprites[5].sprite = renderTextureCtrl.LoadSprite("CircleObjectImage5");
+        renderTextureCtrl.objectSprites[6].sprite = renderTextureCtrl.LoadSprite("CircleObjectImage6");
+        renderTextureCtrl.objectSprites[7].sprite = renderTextureCtrl.LoadSprite("CircleObjectImage7");
     }
 
     public void ObjectDecision() //결정 버튼 눌렀을 시
@@ -23,7 +32,8 @@ public class ObjectChoose : MonoBehaviour
         {
             buttons[i].SetActive(false);
         }
-        customCircle.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(renderName);
+        customCircle.GetComponent<SpriteRenderer>().sprite = renderTextureCtrl.LoadSprite(renderName);
+        customCircle.GetComponent<SpriteRenderer>().color = Color.white;
         renderTextureCtrl.Name(renderName);
 
         int lineLength = GameObject.FindGameObjectsWithTag("Line").Length;

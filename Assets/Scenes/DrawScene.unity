@@ -205,7 +205,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 59766530}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 180752193}
+        m_TargetAssemblyTypeName: ObjectChoose, Assembly-CSharp
+        m_MethodName: Back
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &59766530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,7 +266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 63325923}
   - component: {fileID: 63325922}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: backGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5350,6 +5362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePrefab: {fileID: 5093982487422192295, guid: ab2a7ec8b13275345b07615c40fb193e, type: 3}
   customCircle: {fileID: 1567241390}
+  baseSprite: {fileID: 21300000, guid: f5be512e6ab1a4d49a650d0b25e36960, type: 3}
   colorMark: {fileID: 1913833682}
   dist: 0
   radius: 0

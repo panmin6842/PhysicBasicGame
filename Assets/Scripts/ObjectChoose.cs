@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ObjectChoose : MonoBehaviour
 {
@@ -49,6 +50,11 @@ public class ObjectChoose : MonoBehaviour
 
         customTool.SetActive(true);
         choosePage.SetActive(false);
+    }
+
+    public void Back() //뒤로가기(로비 씬으로 감)
+    {
+        SceneManager.LoadScene("LobyScene");
     }
 
     //원 오브젝트 클릭 시

@@ -11,6 +11,7 @@ public class LineController : MonoBehaviour
     List<Vector2> points = new List<Vector2>(); //마우스의 포지션
 
     [SerializeField] GameObject customCircle;
+    [SerializeField] Sprite baseSprite;
     [SerializeField] Image colorMark;
     BoxCollider2D circleCollder;
 
@@ -115,6 +116,7 @@ public class LineController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
+                customCircle.GetComponent<SpriteRenderer>().sprite = baseSprite;
                 int lineLength = GameObject.FindGameObjectsWithTag("Line").Length;
                 lines = GameObject.FindGameObjectsWithTag("Line");
                 if (lineLength > 0) //그려져있는 선 다 없애기

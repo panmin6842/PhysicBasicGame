@@ -1,7 +1,6 @@
 using System.Collections;
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 //#if UNITY_EDITOR
@@ -39,11 +38,6 @@ public class RenderTextureCtrl : MonoBehaviour
     private void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            SceneManager.LoadScene("MainScene");
-        }
-
     }
 
     public void BackButton() //뒤로가기
@@ -63,6 +57,7 @@ public class RenderTextureCtrl : MonoBehaviour
     }
     public void TextureCapture() //결정 버튼 누르면 캡쳐되고 선택 sprite 이미지 바뀜
     {
+        lineController.enabled = false;
         StartCoroutine(SaveTexture());
     }
     public void Name(string renderName)
@@ -94,15 +89,8 @@ public class RenderTextureCtrl : MonoBehaviour
         path = Path.Combine(Application.persistentDataPath, fileName);
         byte[] bytes = texture.EncodeToPNG();
         File.WriteAllBytes(path, bytes);
+        lineController.enabled = true;
         //Debug.Log("이미지 저장 완료: " + path);
-
-        //저장 후 에셋 즉시 리프레시
-        //#if UNITY_EDITOR
-        //AssetDatabase.Refresh();
-        //#endif
-
-        //ui sprite 바꿔주기
-        //saveObject.GetComponent<Image>().sprite = sprite;
     }
 
     void CircleMask(Texture2D texture)

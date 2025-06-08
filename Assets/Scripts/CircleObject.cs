@@ -10,9 +10,11 @@ public class CircleObject : MonoBehaviour
     public int level;
     public bool isDrag; //드래그 상태 확인
     public bool isMerge; //합칠 때 다른 오브젝트가 방해하지 않도록 잠금 역할
-
+    bool isFall; //떨어졌는지 상태 확인
 
     [SerializeField] Sprite baseSprite;
+
+    int score;
 
     Rigidbody2D rigid;
     Animator ani;
@@ -24,6 +26,7 @@ public class CircleObject : MonoBehaviour
         ani = GetComponent<Animator>();
         circle = GetComponent<CircleCollider2D>();
         isDrag = false;
+        isFall = false;
     }
 
     private void OnEnable()
@@ -122,6 +125,14 @@ public class CircleObject : MonoBehaviour
     {
         isDrag = false;
         rigid.simulated = true;
+
+        StartCoroutine(Fall());
+    }
+
+    IEnumerator Fall()
+    {
+        yield return new WaitForSeconds(2);
+        isFall = true;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -148,6 +159,15 @@ public class CircleObject : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.name == "GameOverZone" && isFall)
+        {
+            gameManager.gameOverPage.SetActive(true);
+            gameManager.gameOverScoreText.text = "점수 : " + "" + gameManager.sum;
+            gameManager.gameOver = true;
+        }
+    }
     public void Hide(Vector3 targetPos) //숨기기
     {
         isMerge = true;
@@ -192,6 +212,25 @@ public class CircleObject : MonoBehaviour
 
         yield return new WaitForSeconds(0.3f);
         level++; //애니메이션 시간이 있기 때문에 좀 늦게 실질적인 레벨 올려줌
+
+        if (level == 1)
+            score = 5;
+        else if (level == 2)
+            score = 10;
+        else if (level == 3)
+            score = 20;
+        else if (level == 4)
+            score = 40;
+        else if (level == 5)
+            score = 80;
+        else if (level == 6)
+            score = 160;
+        else if (level == 7)
+            score = 320;
+
+        gameManager.sum += score;
+
+        gameManager.scoreText.text = "점수 : " + "" + gameManager.sum;
 
         //gameManager.maxLevel = Mathf.Max(level, gameManager.maxLevel); //인자 값 중 최대값 반환
 

@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,7 +10,14 @@ public class GameManager : MonoBehaviour
     public GameObject effectPrefab;
     public Transform effectGroupPos;
 
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI gameOverScoreText;
+
+    public GameObject gameOverPage;
+    public bool gameOver;
+
     public int maxLevel;
+    public int sum;
 
     private void Awake()
     {
@@ -20,6 +27,17 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         NextObject();
+
+        sum = 0;
+        gameOver = false;
+    }
+
+    private void Update()
+    {
+        if (gameOver)
+        {
+            StopAllCoroutines();
+        }
     }
 
     CircleObject GetDongle() //오브젝트 생성 할 수 있도록
@@ -47,14 +65,14 @@ public class GameManager : MonoBehaviour
 
     IEnumerator WaitNext() //다음 오브젝트 생성 코루틴
     {
-        while(circleObject != null)
+        while (circleObject != null)
         {
             yield return null;
         }
 
         yield return new WaitForSeconds(2.5f);
 
-        NextObject();
+        NextObject(); //반복
     }
 
     public void TouchDown()

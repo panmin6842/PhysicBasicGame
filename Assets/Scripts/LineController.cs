@@ -70,7 +70,7 @@ public class LineController : MonoBehaviour
     //그리기
     void LineDraw()
     {
-        if (Mathf.Abs(dist) <= radius + 2)
+        if (Mathf.Abs(dist) <= radius)
         {
             if (Input.GetMouseButtonDown(0)) //첫번째 포지션
             {
@@ -94,7 +94,7 @@ public class LineController : MonoBehaviour
 
                 if (pos != null)
                 {
-                    if (Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
+                    if (points.Count > 0 && Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
                     {
                         points.Add(pos);
                         lineRenderer.positionCount++;
@@ -106,6 +106,10 @@ public class LineController : MonoBehaviour
             {
                 points.Clear();
             }
+        }
+        else if(Mathf.Abs(dist) > radius)
+        {
+            points.Clear();
         }
     }
 
@@ -136,7 +140,7 @@ public class LineController : MonoBehaviour
     //간단한 지우개 기능
     void EraserDraw()
     {
-        if (Mathf.Abs(dist) <= radius + 2)
+        if (Mathf.Abs(dist) <= radius)
         {
             if (Input.GetMouseButtonDown(0)) //첫번째 포지션
             {
@@ -156,7 +160,7 @@ public class LineController : MonoBehaviour
             {
                 Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-                if (Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
+                if (points.Count > 0 && Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
                 {
                     points.Add(pos);
                     lineRenderer.positionCount++;
@@ -167,6 +171,10 @@ public class LineController : MonoBehaviour
             {
                 points.Clear();
             }
+        }
+        else if (Mathf.Abs(dist) > radius)
+        {
+            points.Clear();
         }
     }
 

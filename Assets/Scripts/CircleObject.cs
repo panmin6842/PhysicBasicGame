@@ -19,7 +19,6 @@ public class CircleObject : MonoBehaviour
     Rigidbody2D rigid;
     Animator ani;
     CircleCollider2D circle;
-
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -27,17 +26,22 @@ public class CircleObject : MonoBehaviour
         circle = GetComponent<CircleCollider2D>();
         isDrag = false;
         isFall = false;
+        
     }
 
-    private void OnEnable()
+    public void SetLevelAndSprite(int targetLevel)
     {
+        level = targetLevel;
+
+        if (ani == null) ani = GetComponent<Animator>();
         ani.SetInteger("Level", level);
+
+        AniSprite();
     }
 
     // Update is called once per frame
     void Update()
     {
-        AniSprite();
         if (isDrag)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //마우스 위치(스크린 좌표계로)
@@ -62,60 +66,13 @@ public class CircleObject : MonoBehaviour
         }
     }
 
-    void AniSprite() //각 단계의 sprite
+    void AniSprite()
     {
-        if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 0"))
+        if(gameManager != null && gameManager.customSprites[level] != null)
         {
-            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage0");
-        }
-        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 1"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage1");
-        }
-        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 2"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage2");
-        }
-        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 3"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage3");
-        }
-        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 4"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage4");
-        }
-        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 5"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage5");
-        }
-        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 6"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage6");
-        }
-        else if (ani.GetCurrentAnimatorStateInfo(0).IsName("Level 7"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = LoadSprite("CircleObjectImage7");
+            GetComponent<SpriteRenderer>().sprite = gameManager.customSprites[level];
         }
     }
-
-    Sprite LoadSprite(string fileName) //불러오기
-    {
-        fileName += ".png";
-
-        string path = Path.Combine(Application.persistentDataPath, fileName);
-
-        if (!File.Exists(path))
-        {
-            return baseSprite;
-        }
-
-        byte[] imageData = File.ReadAllBytes(path);
-        Texture2D tex = new Texture2D(2, 2); //미리 텍스처를 만듦
-        tex.LoadImage(imageData);
-
-        return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 250f);
-    }
-
     public void Drag()
     {
         isDrag = true;
@@ -232,7 +189,7 @@ public class CircleObject : MonoBehaviour
 
         gameManager.scoreText.text = "점수 : " + "" + gameManager.sum;
 
-        //gameManager.maxLevel = Mathf.Max(level, gameManager.maxLevel); //인자 값 중 최대값 반환
+        AniSprite();
 
         isMerge = false;
     }

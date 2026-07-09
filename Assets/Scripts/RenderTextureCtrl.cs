@@ -90,7 +90,6 @@ public class RenderTextureCtrl : MonoBehaviour
         byte[] bytes = texture.EncodeToPNG();
         File.WriteAllBytes(path, bytes);
         lineController.enabled = true;
-        //Debug.Log("이미지 저장 완료: " + path);
     }
 
     void CircleMask(Texture2D texture)

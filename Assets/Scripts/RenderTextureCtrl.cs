@@ -30,15 +30,6 @@ public class RenderTextureCtrl : MonoBehaviour
     int width = 0;
     int height = 0;
 
-    private void Start()
-    {
-
-    }
-
-    private void Update()
-    {
-
-    }
 
     public void BackButton() //뒤로가기
     {

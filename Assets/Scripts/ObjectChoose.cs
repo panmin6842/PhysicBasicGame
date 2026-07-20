@@ -28,6 +28,8 @@ public class ObjectChoose : MonoBehaviour
 
     public void ObjectDecision() //결정 버튼 눌렀을 시
     {
+        lineController.ClearAllLines();
+
         lineController.enabled = true;
         for (int i = 0; i < buttons.Length; i++)
         {

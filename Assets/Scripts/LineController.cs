@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,8 +28,14 @@ public class LineController : MonoBehaviour
     bool paint;
     bool eraser;
     [SerializeField] GameObject eraserSizeSlider;
+    [SerializeField] Image penImage;
+    [SerializeField] Image paintImage;
+    [SerializeField] Image eraserImage;
 
     GameObject[] lines;
+
+    [SerializeField] List<GameObject> drawnLines;
+    [SerializeField] List<GameObject> undoLines;
 
     private void OnEnable()
     {
@@ -76,10 +83,11 @@ public class LineController : MonoBehaviour
             {
                 GameObject go = Instantiate(linePrefab);
                 lineRenderer = go.GetComponent<LineRenderer>();
+                drawnLines.Add(go);
+
                 points.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
                 lineRenderer.positionCount = 1;
                 lineRenderer.SetPosition(0, points[0]);
-
 
                 //선 굵기
                 lineRenderer.startWidth = lineWidth;
@@ -90,11 +98,13 @@ public class LineController : MonoBehaviour
             }
             else if (Input.GetMouseButton(0)) //마우스 누를 동안 그려지게
             {
-                Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 mousePos = Input.mousePosition;
+                mousePos.z = -Camera.main.transform.position.z;
+                Vector2 pos = Camera.main.ScreenToWorldPoint(mousePos);
 
                 if (pos != null)
                 {
-                    if (points.Count > 0 && Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
+                    if (points.Count > 0 && Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.01f) //움직임이 있어야 추가되도록 함
                     {
                         points.Add(pos);
                         lineRenderer.positionCount++;
@@ -146,9 +156,12 @@ public class LineController : MonoBehaviour
             {
                 GameObject go = Instantiate(linePrefab);
                 lineRenderer = go.GetComponent<LineRenderer>();
+                drawnLines.Add(go);
+
                 points.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
                 lineRenderer.positionCount = 1;
                 lineRenderer.SetPosition(0, points[0]);
+
                 //선 굵기
                 lineRenderer.startWidth = eraserSizeSlider.GetComponent<Slider>().value;
                 lineRenderer.endWidth = eraserSizeSlider.GetComponent<Slider>().value;
@@ -158,9 +171,11 @@ public class LineController : MonoBehaviour
             }
             else if (Input.GetMouseButton(0)) //마우스 누를 동안 그려지게
             {
-                Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 mousePos = Input.mousePosition;
+                mousePos.z = -Camera.main.transform.position.z;
+                Vector2 pos = Camera.main.ScreenToWorldPoint(mousePos);
 
-                if (points.Count > 0 && Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.1f) //움직임이 있어야 추가되도록 함
+                if (points.Count > 0 && Mathf.Abs(Vector2.Distance(points[points.Count - 1], pos)) > 0.01f) //움직임이 있어야 추가되도록 함
                 {
                     points.Add(pos);
                     lineRenderer.positionCount++;
@@ -178,9 +193,35 @@ public class LineController : MonoBehaviour
         }
     }
 
+    public void ClearAllLines()
+    {
+        drawnLines.Clear();
+        undoLines.Clear();
+    }
+
     //그리는도구 버튼 클릭시
+    public void UndoClick()
+    {
+        if (drawnLines.Count == 0) return;
+
+        GameObject lastLine = drawnLines[drawnLines.Count - 1];
+        undoLines.Add(lastLine);
+        drawnLines.Remove(lastLine);
+        lastLine.GetComponent<LineRenderer>().enabled = false;
+    }
+
+    public void RedoClick()
+    {
+        if (undoLines.Count == 0) return;
+
+        GameObject lastLine = undoLines[undoLines.Count - 1];
+        drawnLines.Add(lastLine);
+        undoLines.Remove(lastLine);
+        lastLine.GetComponent<LineRenderer>().enabled = true;
+    }
     public void PenClick()
     {
+        ImageColorSetting(Color.yellow, Color.white, Color.white);
         pen = true;
         paint = false;
         eraser = false;
@@ -189,6 +230,7 @@ public class LineController : MonoBehaviour
 
     public void PaintClick()
     {
+        ImageColorSetting(Color.white, Color.yellow, Color.white);
         paint = true;
         pen = false;
         eraser = false;
@@ -197,9 +239,17 @@ public class LineController : MonoBehaviour
 
     public void EraserClick()
     {
+        ImageColorSetting(Color.white, Color.white, Color.yellow);
         eraser = true;
         pen = false;
         paint = false;
         eraserSizeSlider.SetActive(true);
+    }
+
+    void ImageColorSetting(Color pen, Color paint, Color eraser)
+    {
+        penImage.color = pen;
+        paintImage.color = paint;
+        eraserImage.color = eraser;
     }
 }

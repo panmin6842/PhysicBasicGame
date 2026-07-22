@@ -14,6 +14,9 @@ public class ObjectChoose : MonoBehaviour
 
     private void Start()
     {
+        SoundManager.instance.bgmAudioSource.clip = SoundManager.instance.drawSceneBGM;
+        SoundManager.instance.bgmAudioSource.Play();
+
         renderName = renderTextureCtrl.name;
 
         renderTextureCtrl.objectSprites[0].sprite = renderTextureCtrl.LoadSprite("CircleObjectImage0");
@@ -28,6 +31,7 @@ public class ObjectChoose : MonoBehaviour
 
     public void ObjectDecision() //결정 버튼 눌렀을 시
     {
+        SoundManager.instance.buttonAudioSource.PlayOneShot(SoundManager.instance.buttonClickClip);
         lineController.ClearAllLines();
 
         lineController.enabled = true;
@@ -56,6 +60,7 @@ public class ObjectChoose : MonoBehaviour
 
     public void Back() //뒤로가기(로비 씬으로 감)
     {
+        SoundManager.instance.buttonAudioSource.PlayOneShot(SoundManager.instance.buttonClickClip);
         SceneManager.LoadScene("LobyScene");
     }
 

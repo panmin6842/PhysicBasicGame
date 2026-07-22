@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SoundManager.instance.bgmAudioSource.clip = SoundManager.instance.mainSceneBGM;
+        SoundManager.instance.bgmAudioSource.Play();
+
         NextObject();
 
         sum = 0;
@@ -84,6 +87,7 @@ public class GameManager : MonoBehaviour
         circleObject.gameManager = this;
         circleObject.level = Random.Range(0, 3);
         circleObject.gameObject.SetActive(true); //크기 설정 후 보이게 하기
+        SoundManager.instance.playAudioSource.PlayOneShot(SoundManager.instance.instantCircleClip);
         circleObject.SetLevelAndSprite(circleObject.level);
 
         StartCoroutine(WaitNext());

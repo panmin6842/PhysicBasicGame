@@ -163,6 +163,7 @@ public class CircleObject : MonoBehaviour
     IEnumerator LevelUpRoutine()
     {
         yield return new WaitForSeconds(0.2f);
+        SoundManager.instance.playAudioSource.PlayOneShot(SoundManager.instance.nextLevelClip);
 
         ani.SetInteger("Level", level + 1);
         EffectPlay();
